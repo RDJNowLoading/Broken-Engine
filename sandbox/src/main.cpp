@@ -19,6 +19,14 @@ int main(int argc, char** argv) {
     // TODO(week1): Initialize a SDL3 Window. Check if it IsValid(). Bail with a message
     // and a non-zero exit code if it failed.
 
+    eng::Window window("Initializing Engine", 1280, 720);
+
+    if (!window.IsValid())
+    {
+        std::print(stderr, "Failed to creae window\n");
+        return 1;
+    }
+
     bool running = true;
     while (running) {
         // TODO(week1): drain the SDL event queue with SDL_PollEvent.
@@ -30,6 +38,27 @@ int main(int argc, char** argv) {
         // lag.
 
         // TODO(week1): clear to a colour of your choosing, then present.
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_EVENT_QUIT:
+                running = false;
+                break;
+            case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                running = false;
+                break;
+            default:
+                //Ignore other events// Do Nothing
+                break;
+            }
+        }
+
+        window.Clear(67, 42, 98);
+
+        window.Present();
     }
 
     std::printf("Clean exit.\n");
