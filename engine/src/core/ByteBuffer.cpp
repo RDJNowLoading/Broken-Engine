@@ -22,16 +22,17 @@ namespace eng {
         m_data = new u8[size];
         std::memset(m_data, 0, size);
     }
+    ByteBuffer::ByteBuffer(const ByteBuffer& other) {
+        m_size = other.m_size;
+        //m_data = other.m_data;// 2
+        m_data = new u8[m_size];
+        std::memcpy(m_data, other.m_data, m_size);
+    }
 
     ByteBuffer::~ByteBuffer() {
         delete m_data;
         m_data = nullptr;
         m_size = 0;
-    }
-
-    ByteBuffer::ByteBuffer(const ByteBuffer& other) {
-        m_size = other.m_size;
-        m_data = other.m_data;
     }
 
     ByteBuffer& ByteBuffer::operator=(const ByteBuffer& other) {
@@ -66,7 +67,7 @@ namespace eng {
     }
 
     const char* DescribeBuffer(const ByteBuffer& buffer) {
-        char text[64];
+        static thread_local char text[64];//3
         std::snprintf(text, sizeof(text), "ByteBuffer{ size=%zu }", buffer.Size());
         return text;
     }
