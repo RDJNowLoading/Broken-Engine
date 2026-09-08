@@ -34,6 +34,16 @@ void Engine::RegisterBuiltinSubsystems(const Options& options) {
 
     m_subsystems.Add("Log", m_log);
     m_subsystems.Add("FileSystem", m_fileSystem);
+    m_subsystems.Add("Window", m_window);
+    m_subsystems.Add("Renderer", m_renderer);
+    m_subsystems.Add("EditorGui", m_gui);
+    m_subsystems.Add("Input", m_input);
+    m_subsystems.Add("Resources", m_resources);
+    m_subsystems.Add("Gizmos", m_gizmo);
+    m_subsystems.Add("MessageBus", m_messaging);
+    m_subsystems.Add("ScriptLibrary", m_scripts);
+    m_subsystems.Add("Scene ", m_sceneSubsystem);
+    m_subsystems.Add("Collisions", m_collisionSubsystem); 
     
 }
 

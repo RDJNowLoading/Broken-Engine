@@ -4,6 +4,7 @@
 //  before filling one in.
 // =============================================================================
 
+#include <engine/core/Subsystem.h>
 #include <engine/resource/ResourceManager.h>
 
 namespace eng {
@@ -15,7 +16,7 @@ Texture::~Texture() {
 }
 
 // Prepares the loader and builds the magenta "missing image" texture.
-bool ResourceManager::Init() {
+bool ResourceManager::Init(const BootConfig& config) {
     return false;
 }
 
