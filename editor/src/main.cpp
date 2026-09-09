@@ -28,16 +28,21 @@ namespace {
 // freshly cloned project, or an automated build that wants the library to be
 // there before it runs the game.
 int BuildScriptsAndExit() {
-    // Only the two pieces this actually needs, started by hand: somewhere to
-    // write messages, and the ability to turn a virtual path into a real one.
-    // There is no window, no renderer and no scene.
-    eng::Log::Init("logs/engine.log", eng::LogLevel::Info);
-    eng::FileSystem::Init();
+    
+    const eng::BootConfig config;
+    eng::Log log;
+    eng::FileSystem filesystem;
+    
+    log.Init(config);
+    filesystem.Init(config);
+
 
     editor::ScriptBuild::Init();
     const editor::ScriptBuild::Result result = editor::ScriptBuild::BuildAndReload();
 
-    eng::Log::Shutdown();
+    filesystem.Shutdown();
+    log.Shutdown();
+
     return result.ok ? 0 : 1;
 }
 

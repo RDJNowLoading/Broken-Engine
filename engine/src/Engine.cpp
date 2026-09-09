@@ -19,12 +19,33 @@ Window& Engine::GetWindow() {
 }
 
 bool Engine::RendererSubsystem::Init(const BootConfig&) {
-    return false;
+    Engine& engine = Engine::Get();
+    if (!Renderer::Init(engine.m_window)) {
+        return false;
+    }
+
+    engine.m_camera.SetViewportSize(Renderer::OutputSize());
+
+    return true;
 }
 
 void Engine::RendererSubsystem::Shutdown() 
 {
     Renderer::Shutdown();
+}
+
+bool Engine::GuiSubsystem::Init(const BootConfig&) {
+    return m_init ? m_init() : true; //return true be default if no editor is present
+}
+
+void Engine::GuiSubsystem::Use(std::function<bool()> init, std::function<void()> shutdown) {
+    m_init = std::move(init);
+    m_shutdown = std::move(shutdown);
+}
+
+void Engine::GuiSubsystem::Shutdown() {
+    if (m_shutdown)
+        m_shutdown;
 }
 
 // Builds the ordered list of subsystems. Registration order IS dependency
