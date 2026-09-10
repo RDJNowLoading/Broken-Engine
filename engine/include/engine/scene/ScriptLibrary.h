@@ -45,7 +45,7 @@
 //  Unload() does 1 to 3. Load() does 4 and 5. Doing them in any other order
 //  means calling a function that no longer exists.
 // ============================================================================
-
+#include <engine/core/Subsystem.h>
 #include <string>
 #include <string_view>
 

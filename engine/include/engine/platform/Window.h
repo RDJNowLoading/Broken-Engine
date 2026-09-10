@@ -30,6 +30,8 @@ namespace eng {
 
 class Window : public Subsystem {
 public:
+    Window() = default;
+
         bool Init(const BootConfig& config) override;
         void Shutdown() override;
     // Opens a window of the given size with the given title.

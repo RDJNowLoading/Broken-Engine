@@ -41,6 +41,7 @@
 //  Neither can do the other's job, and there is no overlap between them.
 // ============================================================================
 
+#include <engine/core/Subsystem.h>
 #include <engine/math/Mat3.h>
 #include <engine/math/Overlap.h>
 #include <engine/math/Vec2.h>

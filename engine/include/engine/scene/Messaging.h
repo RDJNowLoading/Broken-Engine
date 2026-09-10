@@ -43,7 +43,7 @@
 //  problem DeferredOps solves for entities, in a smaller box.
 //  ==========================================================================
 // ============================================================================
-
+#include <engine/core/Subsystem.h>
 #include <engine/scene/EntityId.h>
 
 #include <functional>

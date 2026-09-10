@@ -155,7 +155,6 @@ public:
     bool IsInitialised() const { return m_initialised; }
 
 private:
-    Engine() = default;
 
     void RegisterBuiltinSubsystems(const Options& options);
 
@@ -197,7 +196,7 @@ private:
 
 
 
-    static Engine instance;
+    //static Engine instance;
 
     Log m_log;
     FileSystem m_fileSystem;

@@ -7,10 +7,10 @@
 
 namespace eng {
 
-bool Init(const BootConfig& config) {
+bool Window::Init(const BootConfig& config) {
     return false;
 }
-void Shutdown() {
+void Window::Shutdown() {
 }
     // Opens an operating-system window of the given size, and the object that draws
 // into it. If anything fails the object is left INVALID rather than half-built,
