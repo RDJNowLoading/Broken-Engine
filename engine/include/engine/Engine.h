@@ -203,13 +203,14 @@ private:
     Window m_window;
     RendererSubsystem m_renderer;
     GuiSubsystem m_gui;//Editor
-    InputSubsystem m_input;
-    ResourceManager m_resources;
-    Gizmos m_gizmo;
-    MessageBus m_messaging;
-    ScriptLibrary m_scripts;
-    SceneSubsystem m_sceneSubsystem;
-    CollisionSubsystem m_collisionSubsystem; 
+
+    //InputSubsystem m_input;
+    //ResourceManager m_resources;
+    //Gizmos m_gizmo;
+    //MessageBus m_messaging;
+    //ScriptLibrary m_scripts;
+    //SceneSubsystem m_sceneSubsystem;
+    //CollisionSubsystem m_collisionSubsystem; 
 
     SubsystemStack          m_subsystems;
     BootConfig              m_config;
