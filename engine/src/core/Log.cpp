@@ -3,6 +3,11 @@
 //  empty body. Log.h is the specification; read it before filling one in.
 // =============================================================================
 
+
+///
+///TODO: Implement text color function and text integration for output.
+/// 
+
 #include <engine/core/Config.h>
 #include <engine/core/Log.h>
 #include <engine/core/LogBuffer.h>
@@ -34,9 +39,9 @@ const char* ToString(LogLevel level) {
     switch (level)
     {
         using enum LogLevel;
-        case Info: return "Info";
+        case Info:    return "Info";
         case Warning: return "Warning";
-        case Error: return "Error";
+        case Error:   return "Error";
 
 
     }
@@ -45,7 +50,28 @@ const char* ToString(LogLevel level) {
 
 // Turns a word from the settings file back into a level. Returns false when the
 // text is not a level name, so the caller can report it rather than guess.
-bool ParseLogLevel(std::string_view /*text*/, LogLevel& /*out*/) {
+bool ParseLogLevel(std::string_view text, LogLevel& out) {
+    std::string lowered;
+    lowered.reserve(text.size());
+    for (char c : text) {
+        const bool upper = (c) >= 'A' && c <= 'Z';
+        lowered.push_back(upper ? static_cast<char>(c+('a'-'A')) : c);
+    }
+
+    if (lowered == "info") {
+        out = LogLevel::Info;
+        return true;
+    }
+
+    if (lowered == "warning" || lowered == "warn") {
+        out = LogLevel::Warning;
+        return true;
+    }
+
+    if (lowered == "error") {
+        out = LogLevel::Warning;
+        return true;
+    }
     return false;
 }
 
@@ -102,18 +128,19 @@ bool Log::IsInitialised() {
 }
 
 // Sets the lowest level that gets recorded. Anything below it is dropped.
-void Log::SetThreshold(LogLevel /*level*/) {
+void Log::SetThreshold(LogLevel level) {
+    g_threshold = level;
 }
 
 // The level currently being filtered at.
 LogLevel Log::GetThreshold() {
-    return LogLevel::Info;
+    return g_threshold;
 }
 
 // Would a message at this level be recorded? The logging macros ask this BEFORE
 // formatting, so a filtered-out message never pays the cost of building its text.
-bool Log::ShouldLog(LogLevel /*level*/) {
-    return false;
+bool Log::ShouldLog(LogLevel level) {
+    return level >= g_threshold;
 }
 
 // Records one finished message to all three destinations at once.
@@ -165,6 +192,10 @@ void Log::Write(std::string_view channel, LogLevel level,
 // Pushes anything buffered out to the log file now, so a crash straight
 // afterwards still leaves a readable record.
 void Log::Flush() {
+    std::fflush(stdout);
+    if (g_file.is_open()) {
+        g_file.flush();
+    }
 }
 
 } // namespace eng
