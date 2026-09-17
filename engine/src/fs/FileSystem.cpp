@@ -222,9 +222,22 @@ bool FileSystem::CreateDirectory(std::string_view virtualDirectory,
 }
 
 // Reads a whole text file - a scene, the settings - into a string.
-bool FileSystem::ReadTextFile(std::string_view /*virtualPath*/, std::string& /*outText*/,
-                              std::string& /*outError*/) {
-    return false;
+bool FileSystem::ReadTextFile(std::string_view virtualPath, std::string& outText,
+                              std::string& outError) {
+    const std::string real = Resolve(virtualPath);
+
+    std::ifstream file(real);
+    if (!file) {
+        outError = "cannot open '" + std::string(virtualPath) + "' (looked in '" + real + "')";
+        return false;
+    }
+
+    std::ostringstream contents;
+    contents << file.rdbuf();
+    outText = contents.str();
+
+    outError.clear();
+    return true;
 }
 
 // Reads a whole binary file - an image - into a list of bytes.
