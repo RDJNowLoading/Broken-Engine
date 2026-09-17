@@ -68,11 +68,12 @@ void Window::Shutdown() {
 // Closes the window. The renderer has to go first, which is the order the
 // members are declared in - see Window.h.
 Window::~Window() {
+    Shutdown();
 }
 
 // Did the window actually open? Start-up stops here if it did not.
 bool Window::IsValid() const {
-    return false;
+    return m_window != nullptr && m_renderer != nullptr;
 }
 
 // How wide the window is, in pixels.
