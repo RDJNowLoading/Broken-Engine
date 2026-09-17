@@ -206,9 +206,19 @@ bool FileSystem::ListDirectory(std::string_view virtualDirectory,
 }
 
 // Creates a folder, including any missing parent folders.
-bool FileSystem::CreateDirectory(std::string_view /*virtualDirectory*/,
-                                 std::string& /*outError*/) {
-    return false;
+bool FileSystem::CreateDirectory(std::string_view virtualDirectory,
+                                 std::string& outError) {
+    const std::string real = Resolve(virtualDirectory);
+
+    std::error_code ec;
+    fs::create_directories(real, ec);
+
+    if (ec) {
+        outError = "cannot create '" + std::string(virtualDirectory) + "':" + ec.message();
+        return false;
+    }
+    outError.clear();
+    return true;
 }
 
 // Reads a whole text file - a scene, the settings - into a string.
