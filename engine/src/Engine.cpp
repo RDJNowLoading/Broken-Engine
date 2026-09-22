@@ -46,7 +46,7 @@ void Engine::GuiSubsystem::Use(std::function<bool()> init, std::function<void()>
 
 void Engine::GuiSubsystem::Shutdown() {
     if (m_shutdown)
-        m_shutdown;
+        m_shutdown();
 }
 
 bool Engine::InputSubsystem::Init(const BootConfig&) {
