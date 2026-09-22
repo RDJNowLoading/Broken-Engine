@@ -86,7 +86,7 @@ private:
     };
 
     std::vector<Entry> m_entries;
-    std::size_t m_startedConut = 0;
+    std::size_t m_startedCount = 0;
 };
 
 } // namespace eng
