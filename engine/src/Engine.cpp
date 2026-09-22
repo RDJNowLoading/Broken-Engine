@@ -207,6 +207,7 @@ void Engine::RenderFrame() {
 
 // Shows the frame that was just drawn.
 void Engine::PresentFrame() {
+    Renderer::Present();
 }
 
 // The standalone game's whole loop: begin, simulate, render, present, repeat.
