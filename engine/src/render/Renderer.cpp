@@ -54,7 +54,7 @@ void Renderer::Shutdown() {
 // Is there something to draw with? Everything below quietly does nothing when
 // there is not.
 bool Renderer::IsValid() {
-    return g_renderer;
+    return g_renderer != nullptr;
 }
 
 // The underlying SDL renderer, for the editor's interface and the texture
@@ -68,7 +68,7 @@ void* Renderer::NativeRendererHandle() {
 Vec2 Renderer::OutputSize() {
     if (g_renderer == nullptr) {
         return Vec2{0.0f, 0.0f};
-
+    }
     if (g_target != nullptr && g_target->IsValid()) {
             return Vec2{static_cast<float>(g_target->Width()),
                         static_cast<float>(g_target->Height())};
@@ -78,7 +78,7 @@ Vec2 Renderer::OutputSize() {
     SDL_GetCurrentRenderOutputSize(g_renderer, &w, &h);
 
     return Vec2{static_cast<float>(w), static_cast<float>(h)};
-    }
+    
 }
 
 // Destroys the off-screen picture this target owns.
