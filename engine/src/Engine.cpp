@@ -427,14 +427,55 @@ bool Engine::BeginFrame() {
 
 // Runs the simulation steps this frame owes, in system order: gameplay,
 // movement, collision, messages, create/destroy, camera.
-void Engine::Simulate() {}
+void Engine::Simulate() {
+    for (int step = 0; step < m_stepsThisFrame; step++) {
+        const float fixedStep = m_clock.FixedStepSeconds();
+
+        // Stages 100 to 500: gameplay, movement, collision. See SystemOrder.h.
+        SystemScheduler::UpdateRange(0, SystemStage::kCollisionResponse, fixedStep);
+
+        // Stage 500: deliver messages. Every handler runs here and nowhere else.
+        MessageBus::Dispatch();
+
+        // Stage 600: create and destroy entities, at one defined point.
+        if (m_scene != nullptr) {
+            DeferredOps::Apply(*m_scene);
+        }
+
+        // Stage 700: the camera, after everything it might follow has moved.
+        SystemScheduler::UpdateRange(SystemStage::kDeferred + 1, SystemStage::kFirstRenderStage,
+                                     fixedStep);
+        m_clock.OnStepConsumed();
+    }
+    
+}
 
 // Draws the world through any camera into whatever is currently being drawn
 // into. The editor calls this twice - once per view.
-void Engine::RenderWorld(Camera& /*camera*/, bool /*includeGizmos*/) {}
+void Engine::RenderWorld(Camera& camera, bool includeGizmos) {
+    camera.SetViewportSize(Renderer::OutputSize());
+    // The camera sizes itself from whatever is currently being drawn into, so
+    // this same call frames the world correctly whether it is filling the
+    // whole window or a small panel in the editor.
+    Renderer::Clear(Color{18, 18, 22, 255});
+
+    SpriteRenderSystem::Render(camera);
+
+    // Stages 800 and above, for anything a game wants drawn between the
+    // sprites and the gizmos.
+    SystemScheduler::RenderPass(m_clock.RealDeltaSeconds());
+
+    // Gizmos last, so they land on top of everything else.
+    if (includeGizmos) {
+        Gizmos::Render(camera);
+    }
+}
 
 // Draws one frame for the standalone game, gizmos included.
-void Engine::RenderFrame() {}
+void Engine::RenderFrame() {
+    RenderWorld(m_camera, true);
+        Gizmos::EndFrame(m_clock.RealDeltaSeconds());
+}
 
 // Shows the frame that was just drawn.
 void Engine::PresentFrame() {
