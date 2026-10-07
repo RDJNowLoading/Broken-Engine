@@ -428,7 +428,8 @@ bool Engine::BeginFrame() {
 // Runs the simulation steps this frame owes, in system order: gameplay,
 // movement, collision, messages, create/destroy, camera.
 void Engine::Simulate() {
-    for (int step = 0; step < m_stepsThisFrame; step++) {
+    int step = 0;
+    for (step = 0; step < m_stepsThisFrame; step++) {
         const float fixedStep = m_clock.FixedStepSeconds();
 
         // Stages 100 to 500: gameplay, movement, collision. See SystemOrder.h.
@@ -446,6 +447,10 @@ void Engine::Simulate() {
         SystemScheduler::UpdateRange(SystemStage::kDeferred + 1, SystemStage::kFirstRenderStage,
                                      fixedStep);
         m_clock.OnStepConsumed();
+    }
+
+    if (m_scene != nullptr && step == 0) {
+        DeferredOps::Apply(*m_scene);
     }
     
 }
