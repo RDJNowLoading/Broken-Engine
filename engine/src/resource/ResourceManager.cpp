@@ -27,6 +27,8 @@
 #include <engine/resource/ResourceManager.h>
 
 #include <SDL3/SDL.h>
+#define STBI_NO_STDIO
+#include <stb_image.h>
 
 #include <unordered_map>
 #include <vector>
@@ -53,20 +55,9 @@ TextureRef CreateTextureFromFile(std::string_view virtualPath, std::string& outE
         return nullptr;
     }
 
-    // SDL_IOFromConstMem wraps the bytes we already have in memory so SDL can
-    // read from them as if they were a file. Reading the file ourselves and
-    // then handing over the bytes - rather than giving SDL the filename - is
-    // what keeps every path in the engine going through FileSystem::Resolve.
-    SDL_IOStream* stream = SDL_IOFromConstMem(bytes.data(), bytes.size());
-    if (stream == nullptr) {
-        outError = SDL_GetError();
-        return nullptr;
-    }
+    int width, height, channelsInFile = 0;
+    unsigned char* pixels = stdi_load_from_memory();
 
-    // The `true` is SDL's "close the stream for me" flag, so the stream is
-    // cleaned up whether the load succeeds or fails. SurfacePtr is the
-    // unique_ptr from SdlHandles.h, which frees the surface on the way out of
-    // this function no matter which branch is taken.
     SurfacePtr surface(SDL_LoadBMP_IO(stream, true));
     if (surface == nullptr) {
         outError = SDL_GetError();

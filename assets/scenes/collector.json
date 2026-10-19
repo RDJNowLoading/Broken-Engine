@@ -27,7 +27,8 @@
         },
         {
           "type": "SpriteComponent",
-          "texture": "textures/checker_green.bmp",
+          "texture": "textures/checker_green
+            ",
           "tint": [
             255,
             255,
